@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Avatar World 捏脸换装馆</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>Avatar World 捏脸换装馆</h1>
+    <p>捏一张脸，换一身衣，做一个只属于你的虚拟形象。</p>
+  </header>
+
+  <main class="layout">
+    <section class="preview" aria-label="形象预览">
+      <canvas id="avatar-canvas" width="480" height="600"></canvas>
+      <div class="actions">
+        <button id="btn-random" class="btn btn-primary" type="button">随机捏一个</button>
+        <button id="btn-reset" class="btn btn-ghost" type="button">重置</button>
+      </div>
+      <div class="actions actions-extra">
+        <button id="btn-save" class="btn btn-ghost btn-sm" type="button">保存这个形象</button>
+        <button id="btn-export" class="btn btn-ghost btn-sm" type="button">导出 PNG</button>
+        <button id="btn-share" class="btn btn-ghost btn-sm" type="button">复制分享链接</button>
+      </div>
+    </section>
+
+    <div id="panel" class="panel"></div>
+  </main>
+
+  <div id="gallery" class="gallery"></div>
+
+  <footer class="footnote">所有形象均在你的浏览器里实时绘制，不上传任何数据。 <a href="README.md">使用说明（README）</a></footer>
+
+  <script src="js/state.js"></script>
+  <script src="js/avatar.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/gallery.js"></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', function () {
+      window.AvatarWorld.render();
+    });
+  </script>
+</body>
+</html>
