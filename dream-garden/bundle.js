@@ -168,9 +168,9 @@ __modules["js/game.js"]=function(module,exports,require){
     tryRequire(path); // require 副作用会让模块把全局挂上来
     return root[name] || G[name] || null;
   }
-  var Logic = ensure('DreamGardenLogic', './js/logic.js');
-  var Store = ensure('DreamGardenStorage', './js/storage.js');
-  var Sfx = ensure('DreamGardenAudio', './js/audio.js');
+  var Logic = ensure('DreamGardenLogic', './logic.js');
+  var Store = ensure('DreamGardenStorage', './storage.js');
+  var Sfx = ensure('DreamGardenAudio', './audio.js');
 
   // ---------- 常量 ----------
   var TOOLS = [

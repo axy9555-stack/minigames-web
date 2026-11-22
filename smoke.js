@@ -20,11 +20,17 @@ function makeCtx(canvas) {
       }
       if (prop === 'getImageData') return function () { return { data: new Uint8ClampedArray(4), width: 1, height: 1 }; };
       if (prop in t) return t[prop];
-      return function () {};
+      return function () { ctxMethodCalls++; };
     },
     set(t, prop, v) { t[prop] = v; return true; },
   });
 }
+
+// 冒烟不只查“没报错”：还要查游戏真的画了东西。
+// 2026-11-22 梦幻花园教训：init() 静默失败（require 路径错，Logic/Store 为 null，
+// 游戏没启动、黑屏），旧冒烟只查异常所以放行了。现在要求 150 帧内至少有一次
+// canvas 2D 方法调用，否则判 FAIL。
+let ctxMethodCalls = 0;
 
 function makeCanvas() {
   const c = {
@@ -41,6 +47,7 @@ function makeCanvas() {
 
 function runGame(slug) {
   const errors = [];
+  ctxMethodCalls = 0;
   let rafCallbacks = [];
   let rafId = 0;
   let drawCalls = 0;
@@ -149,13 +156,16 @@ function runGame(slug) {
   } catch (e) {
     return { slug, ok: false, stage: 'touch', error: String(e && e.stack || e) };
   }
-  return { slug, ok: true, frames: 150 };
+  if (ctxMethodCalls === 0) {
+    return { slug, ok: false, stage: 'render', error: 'no canvas 2D calls in 150 frames — game never started drawing (init likely bailed out silently)' };
+  }
+  return { slug, ok: true, frames: 150, draws: ctxMethodCalls };
 }
 
 let failed = 0;
 for (const slug of GAMES) {
   const r = runGame(slug);
-  if (r.ok) console.log('PASS ' + slug + '（加载+150 帧+一次触摸无报错）');
+  if (r.ok) console.log('PASS ' + slug + '（加载+150 帧+一次触摸无报错，canvas 调用 ' + r.draws + ' 次）');
   else { failed++; console.log('FAIL ' + slug + ' @' + r.stage + '\n' + r.error.split('\n').slice(0, 6).join('\n')); }
 }
 process.exit(failed ? 1 : 0);
