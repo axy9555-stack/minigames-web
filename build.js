@@ -16,6 +16,7 @@ const GAMES = [
   { slug: 'magic-sort', name: '魔法分类', desc: '点瓶倒色，把同色液体收到一起', src: 'magic-sort-minigame' },
   { slug: 'meowdoku', name: '猫咪数独', desc: '标准 9×9 数独，三档难度', src: 'meowdoku-minigame' },
   { slug: 'rotate-rings', name: '旋转圆环', desc: '转一格，让每条辐条同色', src: 'rotate-rings-minigame' },
+  { slug: 'dream-garden', name: '梦幻花园', desc: '种花、浇水、收花卖钱，经营你的花园', src: 'dream-garden-minigame' },
   { slug: 'block-blast', name: '积木爆破', desc: '把积木拖到棋盘上，填满整行整列消除', src: 'block-blast-minigame', dom: true },
 ];
 

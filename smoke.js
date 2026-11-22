@@ -6,7 +6,7 @@ const vm = require('vm');
 
 const ROOT = '/home/hatch/workspace/minigames-web';
 const GAMES = process.argv.slice(2).length ? process.argv.slice(2)
-  : ['snake-clash', 'suika', 'relax', 'tidy-up', 'magic-sort', 'meowdoku', 'rotate-rings'];
+  : ['snake-clash', 'suika', 'relax', 'tidy-up', 'magic-sort', 'meowdoku', 'rotate-rings', 'dream-garden'];
 
 function makeCtx(canvas) {
   const gradient = { addColorStop() {} };
