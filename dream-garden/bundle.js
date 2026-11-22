@@ -431,10 +431,20 @@ __modules["js/game.js"]=function(module,exports,require){
     if (!e) return null;
     var t = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]);
     if (!t) return null;
-    return {
-      x: (t.clientX != null ? t.clientX : t.pageX) || 0,
-      y: (t.clientY != null ? t.clientY : t.pageY) || 0
-    };
+    var x = (t.clientX != null ? t.clientX : t.pageX) || 0;
+    var y = (t.clientY != null ? t.clientY : t.pageY) || 0;
+    // 手机地址栏显隐会让 canvas 元素被拉伸：按 canvas 实际显示尺寸把点击换算回布局坐标，
+    // 否则看到的按钮位置和命中矩形对不上（工具栏点不中的真因）。
+    if (canvas && typeof canvas.getBoundingClientRect === 'function') {
+      try {
+        var r = canvas.getBoundingClientRect();
+        if (r.width > 0 && r.height > 0) {
+          x = (x - r.left) * (W / r.width);
+          y = (y - r.top) * (H / r.height);
+        }
+      } catch (err) { /* 换算失败就用原始坐标 */ }
+    }
+    return { x: x, y: y };
   }
   function bindTouch() {
     if (!wxApi || typeof wxApi.onTouchStart !== 'function') return;
@@ -460,6 +470,27 @@ __modules["js/game.js"]=function(module,exports,require){
     if (!wxApi) return;
     if (typeof wxApi.onHide === 'function') wxApi.onHide(function () { saveGame(); });
     if (typeof wxApi.onUnload === 'function') wxApi.onUnload(function () { saveGame(); });
+    // 手机地址栏显隐会改变视口：重读尺寸、重设画布、重建布局，否则按钮位置和命中矩形错位。
+    if (typeof wxApi.onWindowResize === 'function') wxApi.onWindowResize(function () { relayout(); });
+  }
+  function relayout() {
+    if (!ctx || !state) return;
+    var info = null;
+    if (wxApi && typeof wxApi.getSystemInfoSync === 'function') {
+      try { info = wxApi.getSystemInfoSync(); } catch (e) { info = null; }
+    }
+    if (info) {
+      if (info.windowWidth > 0) W = info.windowWidth;
+      if (info.windowHeight > 0) H = info.windowHeight;
+      dpr = info.pixelRatio > 0 ? info.pixelRatio : 1;
+    }
+    try {
+      canvas.width = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+    } catch (e) { /* 画布尺寸失败不中断 */ }
+    if (dpr !== 1 && typeof ctx.setTransform === 'function') ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ui = buildLayout();
+    pressed = null;
   }
   function startAutosave() {
     if (typeof setInterval !== 'function') return;
