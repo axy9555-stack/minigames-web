@@ -368,7 +368,8 @@ __modules["js/game.js"]=function(module,exports,require){
     if (res.ok) {
       state = res.state;
       lastTaskCheck = 0;
-      showToast('已解锁 ' + f.name);
+      seed = fid; // 解锁后直接选中：买完就能种，不用再点一次（之前只解锁不选中，点地块还是种向日葵）
+      showToast('已解锁并选中 ' + f.name);
     } else {
       showToast(res.reason, true);
     }
