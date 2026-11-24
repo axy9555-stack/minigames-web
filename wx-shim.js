@@ -31,7 +31,10 @@
     c.cancelAnimationFrame = (window.cancelAnimationFrame || function (id) { clearTimeout(id); }).bind(window);
     if (onScreen) {
       c.id = 'game-canvas';
-      c.style.cssText = 'position:fixed;inset:0;display:block;width:100vw;height:100vh;' +
+      // 注意：手机浏览器地址栏会占掉一部分高度，100vh 是地址栏收起时的“大视口”，
+      // 画布按 100vh 算会比可见区域高，最下面一行（梦幻花园的种子行）会被顶到屏幕外看不到。
+      // 100dvh 跟随地址栏实时变化，和 window.innerHeight 一致；不支持 dvh 的旧浏览器回退到 100vh。
+      c.style.cssText = 'position:fixed;inset:0;display:block;width:100vw;height:100vh;height:100dvh;' +
         'touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;';
       document.body.appendChild(c);
     }

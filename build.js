@@ -70,7 +70,7 @@ function bundleJs(modules) {
 // 静态资源版本号：每次修 bug 改这里，index.html 里 bundle.js 带 ?v=，
 // 旧版 bundle 就算被浏览器/边缘缓存了 4 小时也不会再被命中。
 // 2026-11-24 梦幻花园买种子 bug 后发现：只改 bundle 内容不够，手机缓存的旧 bundle 仍会跑。
-const ASSET_V = '20261124-seedfix';
+const ASSET_V = '20261124-seedrow';
 
 function gamePage(game) {
   return '<!DOCTYPE html>\n<html lang="zh-CN">\n<head>\n<meta charset="utf-8">\n' +
@@ -80,7 +80,7 @@ function gamePage(game) {
     'canvas{position:fixed;inset:0;display:block;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}</style>\n' +
     '</head>\n<body>\n' +
     '<script>window.__GAME_ID__=' + JSON.stringify(game.slug) + ';</script>\n' +
-    '<script src="../wx-shim.js"></script>\n' +
+    '<script src="../wx-shim.js?v=' + ASSET_V + '"></script>\n' +
     '<script src="bundle.js?v=' + ASSET_V + '"></script>\n' +
     '</body>\n</html>\n';
 }
